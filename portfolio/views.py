@@ -12,7 +12,7 @@ from django.db.models import Avg
 def home(request):
     popular_projects = Project.objects.order_by('-id')[:5]
     latest_projects = Project.objects.order_by('-id')[:5]
-    all_projects = Project.objects.order_by('-id')  # 🔥 전체 포폴 추가
+    all_projects = Project.objects.order_by('-id')  # 전체 포폴 추가
 
     return render(request, 'home.html', {
         'popular_projects': popular_projects,

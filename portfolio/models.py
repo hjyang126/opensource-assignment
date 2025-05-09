@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Project(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    score_total = models.IntegerField(default=0)  # ✅ 이름 변경: evaluation → score_total
+    score_total = models.IntegerField(default=0)  # 이름 변경: evaluation → score_total
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
