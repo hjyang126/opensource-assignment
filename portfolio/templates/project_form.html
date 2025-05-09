@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if edit %}프로젝트 수정{% else %}프로젝트 등록{% endif %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #ffffff;
+            color: #222;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title a {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .form-box {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 10px; /* 버튼과 간격 확보 */
+        }
+
+        .form-box input,
+        .form-box textarea,
+        .form-box select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .submit-box {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .submit-box button {
+            padding: 10px 16px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .submit-box button:hover {
+            background: #333;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">
+        <a href="{% url 'home' %}">공유 포트폴리오</a>
+    </div>
+</header>
+
+<div class="container">
+    <h2>{% if edit %}프로젝트 수정{% else %}새 프로젝트 등록{% endif %}</h2>
+
+    <div class="form-box">
+        <form method="post" id="project-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+    </div>
+
+    <div class="submit-box">
+        <button type="submit" form="project-form">{% if edit %}수정{% else %}등록{% endif %}</button>
+    </div>
+
+    <div style="text-align: right;">
+        <a href="{% url 'mypage' %}"style="color: black;"> 내 페이지로 돌아가기</a>
+    </div>
+</div>
+
+</body>
+</html>

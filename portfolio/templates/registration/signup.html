@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #2a2a2a;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .signup-container {
+            background-color: #3a3a3a;
+            max-width: 400px;
+            margin: 60px auto 0;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .signup-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            width: 110px;
+            font-size: 15px;
+        }
+
+        .form-row input {
+            width: 240px;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .helptext, ul.helptext {
+            font-size: 13px;
+            color: #ccc;
+            margin-top: 6px;
+            margin-bottom: 15px;
+        }
+
+        ul.helptext {
+            padding-left: 20px;
+        }
+
+        .form-actions {
+            max-width: 400px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 30px;
+        }
+
+        .form-actions button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div><h1 style="color: white; margin: 0;">공유 포트폴리오</h1></div>
+    </header>
+
+    <div class="signup-container">
+        <h2>회원가입</h2>
+        <form method="post" id="signup-form">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <label for="{{ form.username.id_for_label }}">Username:</label>
+                {{ form.username }}
+            </div>
+            {% if form.username.help_text %}
+                <div class="helptext">{{ form.username.help_text }}</div>
+            {% endif %}
+
+            <div class="form-row">
+                <label for="{{ form.password1.id_for_label }}">Password:</label>
+                {{ form.password1 }}
+            </div>
+            {% if form.password1.help_text %}
+                <ul class="helptext">
+                    {{ form.password1.help_text|safe }}
+                </ul>
+            {% endif %}
+
+            <div class="form-row">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                {{ form.password2 }}
+            </div>
+            {% if form.password2.help_text %}
+                <div class="helptext">{{ form.password2.help_text }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" form="signup-form">가입</button>
+    </div>
+
+    <p class="login-link">
+        <a href="{% url 'login' %}">이미 계정이 있으신가요?</a>
+    </p>
+</body>
+</html>

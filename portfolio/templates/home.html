@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>포트폴리오 메인페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #1a1a1a; /* ✅ 어두운 배경 */
+            color: #f0f0f0;
+        }
+
+        header {
+            background-color: #000; /* ✅ 헤더: 검정색 */
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title a {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-right a {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: flex;
+            gap: 20px;
+            padding: 0 40px; /* ✅ 좌우 날개 여백 */
+            align-items: flex-start;
+        }
+
+        .left-wide {
+            flex: 2;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            min-height: 700px; /* ✅ 세로 1.5배 */
+            position: relative;
+        }
+
+        .right-narrow {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section {
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 5px;
+        }
+
+        .post-block {
+            margin-bottom: 16px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 8px;
+        }
+
+        .post-block:last-child {
+            border-bottom: none;
+        }
+
+        .post-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-title {
+            font-weight: bold;
+            color: #f0f0f0;
+            max-width: 65%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .post-author {
+            font-size: 14px;
+            color: #ccc;
+            text-align: right;
+        }
+
+        .more-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #1a1a1a;
+            border: 1px solid #888;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 18px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #f0f0f0;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">
+        <a href="{% url 'home' %}">공유 포트폴리오</a>
+    </div>
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+            <a href="{% url 'mypage' %}">{{ user.username }}님</a>
+            <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="
+                    all: unset;
+                    cursor: pointer;
+                    padding: 2px 6px;
+                    border: 1px solid #888;
+                    border-radius: 4px;
+                    margin-left: 10px;
+                    color: white;
+                ">로그아웃</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">로그인</a>
+            <a href="{% url 'signup' %}">회원가입</a>
+        {% endif %}
+    </div>
+</header>
+
+<div class="container">
+    <!-- 전체 포폴 -->
+    <div class="left-wide">
+        <h3>📚 전체 포트폴리오</h3>
+        <a href="{% url 'project_list' %}" class="more-btn">+</a>
+        {% if all_projects %}
+            {% for post in all_projects %}
+                <div class="post-block">
+                    <div class="post-row">
+                        <a href="{% url 'project_detail' post.pk %}" class="post-title">{{ post.title }}</a>
+                        <a href="{% url 'user_page' post.author.username %}" class="post-author">{{ post.author.username }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>등록된 프로젝트가 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <!-- 오른쪽: 인기 글 + 최신 글 위아래 배치 -->
+    <div class="right-narrow">
+        <div class="section">
+            <h3>🔥 인기 글</h3>
+            {% if popular_projects %}
+                {% for post in popular_projects %}
+                    <div class="post-block">
+                        <div class="post-row">
+                            <a href="{% url 'project_detail' post.pk %}" class="post-title">{{ post.title }}</a>
+                            <a href="{% url 'user_page' post.author.username %}" class="post-author">{{ post.author.username }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>인기 글이 없습니다.</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>🆕 최신 글</h3>
+            {% if latest_projects %}
+                {% for post in latest_projects %}
+                    <div class="post-block">
+                        <div class="post-row">
+                            <a href="{% url 'project_detail' post.pk %}" class="post-title">{{ post.title }}</a>
+                            <a href="{% url 'user_page' post.author.username %}" class="post-author">{{ post.author.username }}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>게시글이 없습니다.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

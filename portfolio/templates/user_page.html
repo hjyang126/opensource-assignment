@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ owner.username }}님의 프로젝트</title>
+    <style>
+        body {
+            margin: 0;
+            background-color:#999999; /* ✅ 더 밝은 배경 */
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title a {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px; /* ✅ 양옆 여백 약간 줄임 */
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: black;
+        }
+
+        .project {
+            background: white;
+            color: black;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .project-left {
+            flex: 2;
+        }
+
+        .project-right {
+            flex: 1;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project h2 {
+            margin: 0 0 10px 0;
+            font-size: 22px; /* ✅ 제목 글자 크기 키움 */
+        }
+
+        .project h2 a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .project h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .project p {
+            margin: 5px 0;
+            font-size: 16px; /* ✅ 설명 글자 크기 키움 */
+        }
+
+        .project-right p {
+            margin: 2px 0;
+        }
+
+        .buttons {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .buttons a {
+            color: black;
+            text-decoration: none;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .add-btn-box {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .add-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-decoration: none;
+            color: black;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">
+        <a href="{% url 'home' %}">공유 포트폴리오</a>
+    </div>
+</header>
+
+<div class="content">
+    <h1>{{ owner.username }}님의 프로젝트</h1>
+
+    {% if projects %}
+        {% for project in projects %}
+            <div class="project">
+                <div class="project-left">
+                    <h2><a href="{% url 'project_detail' project.pk %}">{{ project.title }}</a></h2>
+                    <p>{{ project.description|truncatechars:100 }}</p>
+                </div>
+                <div class="project-right">
+                    <div>
+                        <p><strong>평균 점수:</strong> {{ project.average_score|default:"-" }}</p>
+                        <p><strong>등위:</strong> {{ project.rank|default:"-" }}</p>
+                    </div>
+                    {% if is_mypage %}
+                        <div class="buttons">
+                            <a href="{% url 'project_edit' project.pk %}">수정</a>
+                            <form method="post" action="{% url 'project_delete' project.pk %}" style="display:inline;" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                                {% csrf_token %}
+                                <button type="submit" style="background:none; border:none; color:black; cursor:pointer;">삭제</button>
+                            </form>
+                            
+
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>등록된 프로젝트가 없습니다.</p>
+    {% endif %}
+
+    {% if is_mypage %}
+        <div class="add-btn-box">
+            <a href="{% url 'project_add' %}" class="add-btn">+ 새 프로젝트 등록</a>
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

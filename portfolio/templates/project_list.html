@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>전체 프로젝트 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #eaeaea; /* ✅ 전체 배경 더 밝게 */
+            color: #222;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title a {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        nav a, nav span {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            background-color: #222;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #888;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #444;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .project-box {
+            background-color: #2a2a2a;
+            padding: 12px 0;
+            margin-bottom: 14px;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .project-left,
+        .project-right {
+            flex: 1;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .project-right {
+            border-left: 1px solid #ccc;
+        }
+
+        .project-title,
+        .author-nickname {
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        .project-title:hover,
+        .author-nickname:hover {
+            text-decoration: underline;
+        }
+
+        .admin-controls {
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .admin-controls a {
+            color: #444;
+            margin-left: 10px;
+        }
+
+        .admin-controls a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title">
+        <a href="{% url 'home' %}">공유 포트폴리오</a>
+    </div>
+    <nav>
+        {% if user.is_authenticated %}
+            <span>{{ user.username }}님</span>
+            <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn">로그아웃</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">로그인</a>
+            <a href="{% url 'signup' %}" class="btn">회원가입</a>
+        {% endif %}
+    </nav>
+</header>
+
+<div class="container">
+    <h1>전체 프로젝트 목록</h1>
+
+   
+    {% if projects %}
+        {% for project in projects %}
+            <div class="project-box">
+                <div class="project-left">
+                    <a href="{% url 'project_detail' project.pk %}" class="project-title">{{ project.title }}</a>
+                </div>
+                <div class="project-right">
+                    <a href="{% url 'user_page' project.author.username %}" class="author-nickname">{{ project.author.username }}</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>등록된 프로젝트가 없습니다.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>
